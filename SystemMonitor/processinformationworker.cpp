@@ -5,9 +5,11 @@
 #include <signal.h>
 #include <QMessageBox>
 #include <QHeaderView>
+#include "tablememoryitem.h"
 #include "processtools.h"
 #include <proc/sysinfo.h>
 #include <QAction>
+#include "memoryconverter.h"
 using namespace processTools;
 
 processInformationWorker::processInformationWorker(QObject *parent, QSettings *settings) :
@@ -35,6 +37,11 @@ processInformationWorker::processInformationWorker(QObject *parent, QSettings *s
     processesTable->setContextMenuPolicy(Qt::ActionsContextMenu);
     processesTable->addActions(rightClickActions);
 
+    filterCheckbox = mainTabs->findChild<QCheckBox*>("processesFilterCheckbox");
+    connect(filterCheckbox, SIGNAL(toggled(bool)), this, SLOT(filterCheckboxToggled(bool)));
+    searchField = mainTabs->findChild<QLineEdit*>("processesSearchField");
+
+    connect(searchField,SIGNAL(textChanged(QString)),this,SLOT(filterProcesses(QString)));
     connect(this,SIGNAL(signalFilterProcesses(QString)),this,SLOT(filterProcesses(QString)));
     connect(processesTable->selectionModel(),SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
             this,SLOT(changeCurrentTableRowSelection(QModelIndex)));
@@ -44,11 +51,15 @@ processInformationWorker::processInformationWorker(QObject *parent, QSettings *s
 
     this->settings = settings;
 
+    filterCheckbox->setChecked(this->settings->value("processesFilterCheckbox", true).toBool());
 }
 
 
 
-
+void processInformationWorker::filterCheckboxToggled(bool checked)
+{
+    this->settings->setValue("processesFilterCheckbox", checked);
+}
 
 void processInformationWorker::changeCurrentTableRowSelection(QModelIndex current)
 {
@@ -58,9 +69,9 @@ void processInformationWorker::changeCurrentTableRowSelection(QModelIndex curren
 
 void processInformationWorker::createProcessesView()
 {
-    processesTable->setColumnCount(4);
+    processesTable->setColumnCount(5);
     processesTable->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-    processesTable->setHorizontalHeaderLabels(QString("Process Name;User;% CPU;PID;").split(";"));
+    processesTable->setHorizontalHeaderLabels(QString("Process Name;User;% CPU;PID;Memory;").split(";"));
     processesTable->verticalHeader()->setVisible(false);
     processesTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     processesTable->resizeColumnsToContents();
@@ -87,12 +98,8 @@ void processInformationWorker::handleProcessStop()
     }
 }
 
-/**
- * @brief processInformationWorker::handleProcessKill Function to run when the user selects stop as an option for a process
- */
 void processInformationWorker::handleProcessKill()
 {
-    /// TODO: ask for privilage escalation when controlling other users' processes
     int row = processesTable->currentIndex().row();
     int pid = processesTable->item(row,3)->text().toInt();
 
@@ -111,8 +118,28 @@ void processInformationWorker::handleProcessKill()
     }
 }
 
+bool processInformationWorker::shouldHideProcess(unsigned int pid)
+{
+    if (filterCheckbox->checkState() == Qt::CheckState::Checked) {
+        return (pid != geteuid());
+    }
+    return false;
+}
 
-
+void processInformationWorker::filterProcesses(QString filter)
+{
+    filter = filter.toLower();
+    for(int i = 0; i < processesTable->rowCount(); i++)
+    {
+        if (!shouldHideProcess(getpwnam(processesTable->item(i,1)->text().toStdString().c_str())->pw_uid)) {
+            QTableWidgetItem* name = processesTable->item(i,0);
+            QTableWidgetItem* pid = processesTable->item(i, 3);
+            bool nameContains = name->text().toLower().contains(filter);
+            bool cmdLineContains = getProcessCmdline(pid->text().toInt()).toLower().contains(filter);
+            processesTable->setRowHidden(i, (!nameContains && !cmdLineContains));
+        }
+    }
+}
 
 void processInformationWorker::updateTable() {
     PROCTAB* proc = openproc(PROC_FILLMEM | PROC_FILLSTAT | PROC_FILLSTATUS | PROC_FILLUSR | PROC_FILLCOM);
@@ -147,8 +174,15 @@ void processInformationWorker::updateTable() {
         QString cpu = QString::number(settings->value("divide process cpu by cpu count",false).toBool()? p->pcpu/smp_num_cpus:p->pcpu);
         processesTable->setItem(index,2,new TableNumberItem(cpu));
         QString id = QString::number(p->tid);
+        processesTable->setItem(index,3,new TableNumberItem(id));
+        memoryConverter memory = memoryConverter((p->resident - p->share)*sysconf(_SC_PAGESIZE),memoryUnit::b,
+                                    settings->value("unit prefix standards",JEDEC).toString().toStdString());
+        processesTable->setItem(index,4,new TableMemoryItem(memory));
         processesTable->showRow(index);
 
+        if (shouldHideProcess(p->euid)) {
+            processesTable->hideRow(index);
+        }
 
         if (selectedRowInfoID>0) {
             if (selectedRowInfoID == p->tid) {
@@ -161,6 +195,7 @@ void processInformationWorker::updateTable() {
 
     processesTable->setUpdatesEnabled(true);
     processesTable->setSortingEnabled(true);
+    emit(signalFilterProcesses(searchField->text()));
     prevProcs = processes;
 }
 
