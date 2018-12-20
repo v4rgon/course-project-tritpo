@@ -6,7 +6,11 @@
 class TableMemoryItem : public QTableWidgetItem
 {
 public:
-
+    TableMemoryItem(memoryConverter memory)
+        :QTableWidgetItem(calculateTxt(&memory))
+    {
+        this->memory = memory;
+    }
 
     bool operator <(const QTableWidgetItem &other) const
     {

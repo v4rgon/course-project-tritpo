@@ -138,7 +138,6 @@ namespace processTools {
             processName = QFileInfo(temp).fileName();
             free(temp);
         } else {
-            // next try to read from /proc/*//*cmdline
             processName = getProcessNameFromCmdLine(p->tid);
             if (processName=="") {
                 processName = p->cmd;
@@ -258,7 +257,7 @@ namespace processTools {
         while(!in.atEnd()) {
             iconName = in.readLine().trimmed();
             if (iconName.startsWith("Icon=")) {
-                iconName.remove(0,5); // remove the first 5 chars
+                iconName.remove(0,5); 
             } else {
                 continue;
             }
