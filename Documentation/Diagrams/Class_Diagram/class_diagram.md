@@ -1,4 +1,4 @@
 # Диаграмма классов
 ---
 
-![Диаграмма классов](../ClassDiagram/class_diagram.jpg)
+![Диаграмма классов](../Class_Diagram/class_diagram.jpg)
