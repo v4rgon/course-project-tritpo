@@ -10,7 +10,7 @@
 
 ### 1. Завершение приложения<a name="1"></a>
 
-![Завершение приложения](https://github.com/v4rgon/course-project-tritpo/edit/master/Documentation/Diagrams/State/Stop.png)
+![Завершение приложения](../Stop.png)
 
 ### 2. Завершение одного потока приложения<a name="2"></a>
 
