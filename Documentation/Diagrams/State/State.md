@@ -10,17 +10,17 @@
 
 ### 1. Завершение приложения<a name="1"></a>
 
-![Завершение приложения](../State/Stop.jpg)
+![Завершение приложения](https://github.com/v4rgon/course-project-tritpo/edit/master/Documentation/Diagrams/State/Stop.jpg)
 
 ### 2. Завершение одного потока приложения<a name="2"></a>
 
-![Завершение одного потока приложения](../State/Kill.jpg)
+![Завершение одного потока приложения](https://github.com/v4rgon/course-project-tritpo/edit/master/Documentation/Diagrams/State/Kill.jpg)
   
 ### 3. Переход в другую вкладку<a name="3"></a>
 
-![Переход в другую вкладку](../State/Change_Tabs.jpg)
+![Переход в другую вкладку](https://github.com/v4rgon/course-project-tritpo/edit/master/Documentation/Diagrams/State/Change_Tabs.jpg)
 
 ### 4. Поиск<a name="4"></a>
 
-![Поиск](../State/Search.jpg)
+![Поиск](https://github.com/v4rgon/course-project-tritpo/edit/master/Documentation/Diagrams/State/Search.jpg)
 
