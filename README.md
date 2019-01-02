@@ -6,3 +6,4 @@
 
 ### Mockups: ([Ru](https://github.com/v4rgon/course-project-tritpo/blob/master/Images/Mockups.md))
 
+### Source Code: ([Qt,C++](https://github.com/v4rgon/course-project-tritpo/tree/master/SystemMonitor))
