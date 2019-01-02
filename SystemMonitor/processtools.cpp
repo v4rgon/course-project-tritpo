@@ -121,7 +121,6 @@ namespace processTools {
             return "FAILED TO READ PROC";
         }
 
-        // change \0 to ' '
         std::replace(temp.begin(),temp.end(),'\0',' ');
 
         if (temp.size()<1) {
@@ -133,7 +132,7 @@ namespace processTools {
     QString getProcessName(proc_t* p)
     {
         QString processName = "ERROR";
-        char* temp = NULL;//exe_of(p->tid,NULL,NULL);
+        char* temp = NULL;
         if (temp!=NULL) {
             processName = QFileInfo(temp).fileName();
             free(temp);
@@ -179,45 +178,6 @@ namespace processTools {
                 - (before->utime + before->stime));
         return (processcpuTime / cpuTimeA) * 100.0 * sysconf(_SC_NPROCESSORS_CONF);
     }
-
-
-    QString getProcessStartDate(unsigned long long start_time)
-    {
-        __time_t time = getbtime() + start_time/Hertz;
-        struct tm *tm = localtime(&time);
-        char date[255];
-        strftime(date, sizeof(date), "%Ex %ER", tm);
-        return QString(date);
-    }
-
-    QString getProcessStatus(proc_t* p)
-    {
-        switch(p->state) {
-            case 'S':
-                return "Sleeping";
-            break;
-
-            case 'R':
-                return "Running";
-            break;
-
-            case 'Z':
-                return "Zombie";
-            break;
-
-            case 'D':
-                return "Uninterruptible Sleep";
-            break;
-
-            case 'T':
-                return "Stopped";
-            break;
-
-            default:
-                return "Unknown state: '" + QString(p->state) + "'";
-        }
-    }
-
 
     QIcon getProcessIconFromName(QString procName, std::unordered_map<QString, QIcon> &processIconMapCache)
     {
