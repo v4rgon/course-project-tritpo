@@ -11,3 +11,5 @@
 ### Test Plan: ([RU](https://github.com/v4rgon/course-project-tritpo/blob/master/Testing/Testing_plan.md))
 
 ### Test Result: ([RU](https://github.com/v4rgon/course-project-tritpo/blob/master/Testing/Test_Result.md))
+
+### Refactoring: ([RU](https://github.com/v4rgon/course-project-tritpo/blob/master/Documentation/Refactoring/Refactoring.md))
