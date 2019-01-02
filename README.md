@@ -4,7 +4,7 @@
 
 ### UML Diagrams: ([Ru](https://github.com/v4rgon/course-project-tritpo/blob/master/Documentation/Diagrams/UML_Diagrams.md))
 
-### Mockups: ([Ru](https://github.com/v4rgon/course-project-tritpo/blob/master/Images/Mockups.md))
+### Mockups: ([Ru](https://github.com/v4rgon/course-project-tritpo/blob/master/Documentation/Mockups/Mockups.md))
 
 ### Source Code: ([Qt,C++](https://github.com/v4rgon/course-project-tritpo/tree/master/SystemMonitor))
 
