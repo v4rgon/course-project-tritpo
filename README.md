@@ -8,4 +8,6 @@
 
 ### Source Code: ([Qt,C++](https://github.com/v4rgon/course-project-tritpo/tree/master/SystemMonitor))
 
-### Test Plan: ([Test Plan](https://github.com/v4rgon/course-project-tritpo/blob/master/Testing/Testing_plan.md))
+### Test Plan: ([RU](https://github.com/v4rgon/course-project-tritpo/blob/master/Testing/Testing_plan.md))
+
+### Test Result: ([RU](https://github.com/v4rgon/course-project-tritpo/blob/master/Testing/Test_Result.md))
